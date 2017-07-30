@@ -1,6 +1,5 @@
 //! Basic operations on the Lua context, such as creation, destruction, etc
-use hlua::Lua;
-use hlua::AnyLuaValue;
+use hlua::{Lua, AnyLuaValue, LuaRead};
 use error::DeucalionError;
 
 /// Do all required work to initialize a game's Lua context.
@@ -35,5 +34,15 @@ pub fn execute_script(
     match environment.execute::<AnyLuaValue>(&contents) {
         Ok(v) => Ok(v),
         Err(e) => Err(DeucalionError::from(e)),
+    }
+}
+
+/// Attempts to read a value of type V from the given Lua environment, returning a `DeucalionError` on
+/// failure.
+pub fn get_value_by_identifier<'l, 'e, I, V>(environment: &'l mut Lua<'e>, identifier: I) -> Result<V, DeucalionError>
+    where I: ::std::borrow::Borrow<str>, V: LuaRead<::hlua::PushGuard<&'l mut Lua<'e>>> {
+    match environment.get(identifier) {
+        Some(v) => Ok(v), 
+        None => Err(DeucalionError::from("SCREEN_WIDTH is not defined or is the wrong type",))
     }
 }

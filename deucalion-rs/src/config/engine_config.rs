@@ -1,6 +1,6 @@
 //! Functions for managing and acquiring engine configuration
 use error::DeucalionError;
-use scripting::{execute_script, Lua};
+use scripting::{execute_script, get_value_by_identifier, Lua};
 use resource;
 // TODO: Make this work with the Lua subsystem.
 
@@ -74,31 +74,9 @@ fn get_engine_config_from_environment(
 ) -> Result<EngineConfig, DeucalionError> {
     // Here, we have a set of match expressions that attempt to fetch the global config variables.
     // At some point, this action (extract Lua global or error) should be abstracted into a macro
-    let screen_width = match environment.get("SCREEN_WIDTH") {
-        Some(v) => v,
-        None => {
-            return Err(DeucalionError::from(
-                "SCREEN_WIDTH is not defined or is the wrong type",
-            ));
-        }
-    };
-    let screen_height = match environment.get("SCREEN_HEIGHT") {
-        Some(v) => v,
-        None => {
-            return Err(DeucalionError::from(
-                "SCREEN_HEIGHT is not defined or is the wrong type",
-            ));
-        }
-    };
-    let maximum_framerate = match environment.get("MAXIMUM_FRAMERATE") {
-        Some(v) => v,
-        None => {
-            return Err(DeucalionError::from(
-                "MAXIMUM_FRAMERATE is not defined or is the wrong \
-                 type",
-            ));
-        }
-    };
+    let screen_width = get_value_by_identifier(environment, "SCREEN_WIDTH")?;
+    let screen_height = get_value_by_identifier(environment, "SCREEN_HEIGHT")?;
+    let maximum_framerate = get_value_by_identifier(environment, "MAXIMUM_FRAMERATE")?;
     // Simply build the EngineConfig struct. Making it to this point means the config is O.K.
     Ok(EngineConfig {
         screen_height: screen_height,
@@ -113,5 +91,31 @@ fn get_default_engine_config() -> EngineConfig {
         screen_width: 640,
         screen_height: 480,
         maximum_framerate: 60,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_get_engine_config_from_lua_environment() {
+        use scripting::get_scripting_environment;
+        let mut env = get_scripting_environment();
+        // Set the relevant varaibles
+        env.execute::<()>("SCREEN_WIDTH=1\nSCREEN_HEIGHT=2\nMAXIMUM_FRAMERATE=3")
+            .unwrap();
+        // Extract the values
+        let cfg = super::get_engine_config_from_environment(&mut env).unwrap();
+        let desired_cfg = super::EngineConfig {
+            screen_width: 1,
+            screen_height: 2,
+            maximum_framerate: 3,
+        };
+        assert_eq!(
+            cfg,
+            desired_cfg,
+            "Expected engine config {:?}, got {:?}.",
+            desired_cfg,
+            cfg
+        );
     }
 }
