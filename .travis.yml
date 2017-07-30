@@ -1,12 +1,7 @@
+dist: trusty
 sudo: false
-
-# This may need to change at some point
 notifications:
   email: change
-
-env:
-  global:
-  - LD_LIBRARY_PATH=/home/travis/build/team-code/deucalion/sfml_install/usr/local/lib
 
 language: rust
 
@@ -14,34 +9,17 @@ rust:
   - nightly
 
 cache:
-  - cargo
+    cargo: true
+    apt: true
 
 script:
-  # Build the SFML from source >:(
-  - if [ ! -d sfml_install ]; then ./build_sfml.sh; fi
-  # Move the cargo config hooks
-  - mkdir .cargo
-  - mv .travis.cargo.config .cargo/config
-  # Actually do the CI build.
-  - cd deucalion-rs
-  - cargo build --verbose && cargo test --verbose && cargo doc --verbose
+    - cd deucalion-rs
+    - cargo build --verbose
+    - cargo test --verbose
+    - cargo doc --verbose
 
 addons:
   apt:
     packages:
-    - libpthread-stubs0-dev
-    - libgl1-mesa-dev
-    - libx11-dev
-    - libx11-xcb-dev
-    - libxcb-image0-dev
-    - libxrandr-dev
-    - libxcb-randr0-dev
-    - libudev-dev
-    - libfreetype6-dev
-    - libglew-dev
-    - libjpeg8-dev
-    - libgpgme11-dev
-    - libsndfile1-dev
-    - libopenal-dev
-    - libjpeg62
-    - cmake
+     - libsfml-dev
+     - libcsfml-dev
