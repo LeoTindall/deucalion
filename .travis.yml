@@ -16,7 +16,6 @@ script:
     - cd deucalion-rs
     - cargo build --verbose
     - cargo test --verbose
-    - cargo doc --verbose
 
 addons:
   apt:
