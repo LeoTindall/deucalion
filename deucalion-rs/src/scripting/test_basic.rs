@@ -3,12 +3,13 @@
 #[test]
 fn test_scripting_execution_basic() {
     use scripting::basic::get_scripting_environment;
+    use hlua::AnyLuaValue;
     // Get an environment to work with
-    let mut environment = get_scripting_environment(); 
+    let mut environment = get_scripting_environment();
     // Set a variable x = 2 in the environment
     environment.set("x", 2);
     // Modify the variable with a Lua script; specifically, add one to x
-    match environment.execute::<()>("x = x + 1") {
+    match environment.execute::<AnyLuaValue>("x = x + 1") {
         Ok(v) => println!("Successfully executed the code: {:?}", v),
         Err(e) => panic!("Failed to execute() the code: {:?}", e),
 

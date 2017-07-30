@@ -39,12 +39,10 @@ pub fn get_resource_path_by_name(
         // Game and engine configurations are always in the same place
         ResourceKind::EngineConfig => Ok(path.join("engine_config.lua")),
         ResourceKind::GameConfig => Ok(path.join("game_config.lua")),
-        _ => {
-            Err(DeucalionError::NotImplementedError(String::from(
-                "Currently, this kind \
-                 of resource isn't \
-                 implemented.",
-            )))
-        }
+        _ => Err(DeucalionError::NotImplementedError(String::from(
+            "Currently, this kind \
+             of resource isn't \
+             implemented.",
+        ))),
     }
 }
