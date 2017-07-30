@@ -13,6 +13,8 @@ pub enum DeucalionError {
     IoError(io::Error),
     /// An error in a script caused this error
     LuaError(hlua::LuaError),
+    /// An problem getting a value from a Lua context. (Identifier, Typename)
+    LuaGetFailed(String, String),
     /// A problem with tilemaps caused this error
     TiledError(tiled::TiledError),
     /// Some functionality that is not yet implemented was called, causing this error.
@@ -56,11 +58,12 @@ impl<'a> From<&'a str> for DeucalionError {
 impl Error for DeucalionError {
     fn description(&self) -> &str {
         match *self {
-            DeucalionError::IoError(ref err) => err.description(),
-            DeucalionError::LuaError(_) => "There was an error in Lua code.",
-            DeucalionError::TiledError(ref err) => err.description(),
-            DeucalionError::NotImplementedError(ref string) => string.as_ref(),
-            DeucalionError::OtherError(ref string) => string.as_ref(),
+            DeucalionError::IoError(_) => "there was a problem with an I/O operation",
+            DeucalionError::LuaError(_) => "there was an error in Lua code",
+            DeucalionError::LuaGetFailed(_, _) => "could not retrieve a value from a Lua context",
+            DeucalionError::TiledError(_) => "there was a problem with a Tiled map",
+            DeucalionError::NotImplementedError(_) => "an unimplemented operation was executed",
+            DeucalionError::OtherError(_) => "an error of an unknown type occurred",
         }
     }
     fn cause(&self) -> Option<&Error> {
@@ -69,6 +72,7 @@ impl Error for DeucalionError {
             // LuaError doesn't currently implement Error. If it ever does,
             //  this can be changed to be more useful.
             DeucalionError::LuaError(_) => None,
+            DeucalionError::LuaGetFailed(_, _) => None,
             // TiledError currently doesn't implement Error.
             DeucalionError::TiledError(ref err) => Some(err as &Error),
             DeucalionError::NotImplementedError(_) => None,
@@ -83,10 +87,20 @@ impl fmt::Display for DeucalionError {
             DeucalionError::IoError(ref err) => fmt::Display::fmt(err, f),
             // Currently, LuaError doesn't implement Display. If it ever does,
             //  this can be changed in order to be more useful
-            DeucalionError::LuaError(_) => Err(fmt::Error),
-            DeucalionError::TiledError(ref err) => fmt::Display::fmt(err, f),
-            DeucalionError::NotImplementedError(ref string) => fmt::Display::fmt(string, f),
-            DeucalionError::OtherError(ref string) => fmt::Display::fmt(string, f),
+            DeucalionError::LuaError(ref err) => write!(f, "error in Lua code: {:?}", err),
+            DeucalionError::LuaGetFailed(ref identifier, ref typename) => write!(
+                f,
+                "failed to acquire value '{}' of type '{}' from the Lua context",
+                identifier,
+                typename
+            ),
+            DeucalionError::TiledError(ref err) => {
+                write!(f, "error in Tiled data or parsing: {}", err)
+            }
+            DeucalionError::NotImplementedError(ref string) => {
+                write!(f, "not implemented: {}", string)
+            }
+            DeucalionError::OtherError(ref string) => write!(f, "untyped error: {}", string),
         }
     }
 }
