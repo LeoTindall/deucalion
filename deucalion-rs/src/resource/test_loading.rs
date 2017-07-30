@@ -35,8 +35,9 @@ fn test_engine_config_reader() {
     let mut test_content = String::new();
 
     // Read it in "manually"
-    File::open(get_resource_path_by_name(ResourceKind::EngineConfig, "").unwrap())
-        .unwrap()
+    File::open(
+        get_resource_path_by_name(ResourceKind::EngineConfig, "").unwrap(),
+    ).unwrap()
         .read_to_string(&mut correct_content)
         .unwrap();
 

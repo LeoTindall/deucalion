@@ -19,17 +19,20 @@ pub struct EngineConfig {
 /// this function will return the default configuration, which will typically work for every
 /// configuration.
 pub fn get_engine_config(environment: &mut Lua) -> EngineConfig {
-    let path =
-        match resource::loading::get_resource_path_by_name(resource::ResourceKind::EngineConfig,
-                                                           "") {
-            Ok(v) => v,
-            Err(e) => {
-                // If the engine config's path can't be generated, it certainly can't be loaded.
-                error!("Failed to generate the path for the engine configuration script: {}",
-                       e);
-                return get_default_engine_config();
-            }
-        };
+    let path = match resource::loading::get_resource_path_by_name(
+        resource::ResourceKind::EngineConfig,
+        "",
+    ) {
+        Ok(v) => v,
+        Err(e) => {
+            // If the engine config's path can't be generated, it certainly can't be loaded.
+            error!(
+                "Failed to generate the path for the engine configuration script: {}",
+                e
+            );
+            return get_default_engine_config();
+        }
+    };
 
     // Syntax monster explaination for the &* in the second argument to execute_script:
     //  to_string_lossy returns a Cow<str>, which we dereference to str and then borrow to &str
@@ -37,49 +40,63 @@ pub fn get_engine_config(environment: &mut Lua) -> EngineConfig {
         Ok(_) => {
             match get_engine_config_from_environment(environment) {
                 Ok(w) => {
-                    info!("Succesfully acquired engine config at {}",
-                          path.to_string_lossy());
+                    info!(
+                        "Succesfully acquired engine config at {}",
+                        path.to_string_lossy()
+                    );
                     trace!("Engine config is {:?}", w);
                     w // This is the valid EngineConfig struct built from the script
                 }
                 Err(e) => {
-                    error!("Failed to acquire engine config from script at {}: {}",
-                           path.to_string_lossy(),
-                           e);
+                    error!(
+                        "Failed to acquire engine config from script at {}: {}",
+                        path.to_string_lossy(),
+                        e
+                    );
                     get_default_engine_config()
                 }
             }
         }
         Err(e) => {
-            error!("Failed to run engine config script at {}: {}",
-                   path.to_string_lossy(),
-                   e);
+            error!(
+                "Failed to run engine config script at {}: {}",
+                path.to_string_lossy(),
+                e
+            );
             get_default_engine_config()
         }
     }
 }
 
 /// Check variables in the Lua environment, bringing their values into an EngineConfig struct
-fn get_engine_config_from_environment(environment: &mut Lua) -> Result<EngineConfig, DeucalionError> {
+fn get_engine_config_from_environment(
+    environment: &mut Lua,
+) -> Result<EngineConfig, DeucalionError> {
     // Here, we have a set of match expressions that attempt to fetch the global config variables.
     // At some point, this action (extract Lua global or error) should be abstracted into a macro
     let screen_width = match environment.get("SCREEN_WIDTH") {
         Some(v) => v,
         None => {
-            return Err(DeucalionError::from("SCREEN_WIDTH is not defined or is the wrong type"));
+            return Err(DeucalionError::from(
+                "SCREEN_WIDTH is not defined or is the wrong type",
+            ));
         }
     };
     let screen_height = match environment.get("SCREEN_HEIGHT") {
         Some(v) => v,
         None => {
-            return Err(DeucalionError::from("SCREEN_HEIGHT is not defined or is the wrong type"));
+            return Err(DeucalionError::from(
+                "SCREEN_HEIGHT is not defined or is the wrong type",
+            ));
         }
     };
     let maximum_framerate = match environment.get("MAXIMUM_FRAMERATE") {
         Some(v) => v,
         None => {
-            return Err(DeucalionError::from("MAXIMUM_FRAMERATE is not defined or is the wrong \
-                                             type"));
+            return Err(DeucalionError::from(
+                "MAXIMUM_FRAMERATE is not defined or is the wrong \
+                 type",
+            ));
         }
     };
     // Simply build the EngineConfig struct. Making it to this point means the config is O.K.

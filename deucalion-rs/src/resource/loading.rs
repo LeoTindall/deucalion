@@ -17,9 +17,10 @@ pub fn get_resource_reader_by_name(kind: ResourceKind, name: &str) -> Result<Fil
 
 /// Get the path to a resource in the data directory scheme. See BLUEPRINT.md for more info.
 /// If requesting a resource whose name doesn't change, the `name` argument is ignored.
-pub fn get_resource_path_by_name(kind: ResourceKind,
-                                 name: &str)
-                                 -> Result<PathBuf, DeucalionError> {
+pub fn get_resource_path_by_name(
+    kind: ResourceKind,
+    name: &str,
+) -> Result<PathBuf, DeucalionError> {
     // Everything is in the data directory.
     let mut path = Path::new(".").join("data");
     match kind {
@@ -39,9 +40,11 @@ pub fn get_resource_path_by_name(kind: ResourceKind,
         ResourceKind::EngineConfig => Ok(path.join("engine_config.lua")),
         ResourceKind::GameConfig => Ok(path.join("game_config.lua")),
         _ => {
-            Err(DeucalionError::NotImplementedError(String::from("Currently, this kind \
-                                                                         of resource isn't \
-                                                                         implemented.")))
+            Err(DeucalionError::NotImplementedError(String::from(
+                "Currently, this kind \
+                 of resource isn't \
+                 implemented.",
+            )))
         }
     }
 }
