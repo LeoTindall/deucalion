@@ -1,4 +1,4 @@
-#[allow(unused_imports)]
+#![allow(unused_imports)]
 use resource::loading::*;
 use resource::ResourceKind;
 use std::path::PathBuf;
