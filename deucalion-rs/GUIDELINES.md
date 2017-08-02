@@ -6,14 +6,20 @@ these guidelines should be explained in comments.
 
 ## Datatypes
 ### Integers
-Signed and unsigned integers should be `isize` or `usize`, respectively, except
+Signed and unsigned integers should be `i32` or `u32`, respectively, except
 when they are meant to be passed to API functions that require specific
 types. In those cases, the reason for the deviation should be documented.
+
+When integers are being used as dimensions, they need to be wrapped in the
+appropriate Euclid types, which associate them with either `ScreenSpace`
+or `WorldSpace`. This allows the typechecker to statically prevent confusing
+screen points with world points.
+
 ### Errors
 `error.rs` defines DeucalionError. When a function might encounter an error, it
 should return a Result<T, DeucalionError>. If DeucalionError doesn't have the
 type of error available, you should implement it or use OtherError
-(by DeucalionError::from("string literal") or DeucalionError::from(string)).
+(by `DeucalionError::from("string literal")` or `DeucalionError::from(string)`).
 
 ## Logging Practices
 deucalion-rs uses the Rust `log` logging abstraction. The macros `error!()`,
