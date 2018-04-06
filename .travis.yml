@@ -12,6 +12,9 @@ cache:
     cargo: true
     apt: true
 
+env:
+    - RUST_TEST_THREADS=1
+
 script:
     - cd deucalion-rs
     - cargo build --verbose
