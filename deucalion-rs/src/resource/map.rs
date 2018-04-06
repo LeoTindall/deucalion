@@ -10,12 +10,10 @@ use geom::{ScreenSize, WorldSize};
 
 /// A TileMap is roughly equivalent to a `tiled::Map`, with pre-loaded images for the tilesets.
 pub struct Tilemap {
+    pub map: tiled::Map,
     pub dimensions: WorldSize,
     pub tile_dimensions: ScreenSize,
     pub tilesets: Vec<Tileset>,
-    pub layers: Vec<tiled::Layer>,
-    pub object_groups: Vec<tiled::ObjectGroup>,
-    pub properties: tiled::Properties,
     pub background_color: Color,
 }
 
@@ -29,9 +27,8 @@ impl Tilemap {
     /// Given a name, return a Tilemap corresponding to it (or not, if it doesn't exist)
     pub fn by_name(name: &str) -> Result<Tilemap, DeucalionError> {
         // Get the reader and path for the map's file
-        let (map_reader, mut map_path) =
-            loading::get_resource_reader_and_path_by_name(ResourceKind::Map, name)?;
-        let map = tiled::parse(map_reader)?;
+        let mut map_path = loading::get_resource_path_by_name(ResourceKind::Map, name)?;
+        let map = tiled::parse_file(&map_path)?;
         info!(
             "Successfully loaded a map '{}' from its TMX file at '{}'",
             name,
@@ -42,7 +39,7 @@ impl Tilemap {
         map_path.pop();
         // Then load them all.
         let mut tilesets: Vec<Tileset> = Vec::with_capacity(map.tilesets.len());
-        for ts in map.tilesets {
+        for ts in map.tilesets.iter() {
             // Determine the file path and load the file
             map_path.push(&ts.images[0].source);
             let image = Texture::from_file(&map_path.to_string_lossy());
@@ -56,7 +53,7 @@ impl Tilemap {
                     name
                 );
                 tilesets.push(Tileset {
-                    metadata: ts,
+                    metadata: ts.clone(),
                     texture: image,
                 });
             } else {
@@ -84,12 +81,10 @@ impl Tilemap {
         };
 
         return Ok(Tilemap {
+            map: map,
             dimensions: dimensions,
             tile_dimensions: tile_dimensions,
             tilesets: tilesets,
-            layers: map.layers,
-            object_groups: map.object_groups,
-            properties: map.properties,
             background_color: bgcolor,
         });
     }
