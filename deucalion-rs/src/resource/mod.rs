@@ -8,5 +8,5 @@ pub use resource::resource_kind::ResourceKind;
 pub mod loading;
 
 // Imports to run unit tests
-mod test_map;
-mod test_loading;
+#[cfg(test)] mod test_map;
+#[cfg(test)] mod test_loading;

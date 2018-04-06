@@ -11,18 +11,28 @@ rust:
 matrix:
   allow_failures:
     - rust: nightly
+  fast_finish: true
 
 cache:
     cargo: true
     apt: true
 
+# Test in order and output debug information
 env:
+  global:
     - RUST_TEST_THREADS=1
+    - RUST_LOG="warn,deucalion=debug"
+
+# Start xvfb (virtual framebuffer) so that SFML doesn't segfault 
+# all over the place
+before_script:
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
 
 script:
     - cd deucalion-rs
     - cargo build --verbose
-    - cargo test --verbose
+    - cargo test --verbose -- --nocapture
 
 addons:
   apt:

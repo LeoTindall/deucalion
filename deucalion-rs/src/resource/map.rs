@@ -28,21 +28,25 @@ impl Tilemap {
     pub fn by_name(name: &str) -> Result<Tilemap, DeucalionError> {
         // Get the reader and path for the map's file
         let mut map_path = loading::get_resource_path_by_name(ResourceKind::Map, name)?;
+        debug!("Loading map {} at {}.", name, map_path.display());
         let map = tiled::parse_file(&map_path)?;
         info!(
             "Successfully loaded a map '{}' from its TMX file at '{}'",
             name,
             map_path.to_string_lossy()
         );
-
+        
         // Load the tilesets used by this map. First, figure out the directory they're in...
         map_path.pop();
         // Then load them all.
+        debug!("Loading tilesets for map {} ", name);
         let mut tilesets: Vec<Tileset> = Vec::with_capacity(map.tilesets.len());
         for ts in map.tilesets.iter() {
             // Determine the file path and load the file
             map_path.push(&ts.images[0].source);
+            debug!("Loading texture from {}", map_path.display());
             let image = Texture::from_file(&map_path.to_string_lossy());
+            info!("Successfully loaded texture from {}", map_path.display());
             map_path.pop();
 
             // Deal with the loaded file

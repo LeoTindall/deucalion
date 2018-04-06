@@ -10,7 +10,7 @@ fn test_scripting_execution_basic() {
     environment.set("x", 2);
     // Modify the variable with a Lua script; specifically, add one to x
     match environment.execute::<AnyLuaValue>("x = x + 1") {
-        Ok(v) => println!("Successfully executed the code: {:?}", v),
+        Ok(v) => info!("Successfully executed the code: {:?}", v),
         Err(e) => panic!("Failed to execute() the code: {:?}", e),
 
     }
