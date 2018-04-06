@@ -8,7 +8,7 @@ hlua = "0.3"
 sfml = "0.12"
 log = "0.3"
 env_logger = "0.4.3"
-tiled = "0.6.0"
+tiled = "0.7.3"
 update_rate = "1"
 
 euclid = "0.15"
