@@ -1,6 +1,6 @@
 # Deucalion
 
-[![Build Status](https://travis-ci.org/leotindall/deucalion.svg?branch=master)](https://travis-ci.org/team-code/deucalion)
+[![Build Status](https://api.travis-ci.org/LeoTindall/deucalion.svg?branch=master)](https://travis-ci.org/leotindall/deucalion)
 
 ## What?
 Deucalion is a game engine designed to bridge the gap between restrictive engine/IDE combinations like RPG Maker MV and fully custom engines. 
