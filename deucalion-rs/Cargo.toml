@@ -4,11 +4,10 @@ version = "0.1.0"
 authors = ["SilverWingedSeraph <lfstindall@gmail.com>"]
 
 [dependencies]
-hlua = "0.3"
-sfml = "0.12"
-log = "0.3"
-env_logger = "0.4.3"
-tiled = "0.6.0"
+hlua = "0.4"
+sfml = "0.14"
+log = "0.4"
+env_logger = "0.4"
+tiled = "0.7"
 update_rate = "1"
-
-euclid = "0.15"
+euclid = "0.17"

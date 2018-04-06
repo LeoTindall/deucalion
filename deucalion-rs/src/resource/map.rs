@@ -80,7 +80,7 @@ impl Tilemap {
         let bgcolor: Color = if let Some(rgb_color) = map.background_colour {
             Color::rgb(rgb_color.red, rgb_color.green, rgb_color.blue)
         } else {
-            Color::black()
+            Color::BLACK
         };
 
         return Ok(Tilemap {

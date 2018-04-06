@@ -8,8 +8,7 @@ extern crate hlua;
 extern crate tiled;
 extern crate euclid;
 
-use sfml::window::{ContextSettings, VideoMode};
-use sfml::window::style as window_style;
+use sfml::window::{ContextSettings, VideoMode, Style as WindowStyle};
 use sfml::window::Event;
 use sfml::graphics::{RenderTarget, RenderWindow};
 use sfml::graphics::Color;
@@ -37,20 +36,13 @@ fn fake_main<'engine>() -> i32 {
     // Acquire the game's configuration.
     let game_config = config::game_config::get_game_config(&mut engine_scripting_environment);
 
-    // Initialize the game window. If this can't be done, there's really no point in
-    // continuing on.
-    let mut window = match RenderWindow::new(
+    // Initialize the game window.
+    let mut window = RenderWindow::new(
         VideoMode::new(engine_config.screen_width, engine_config.screen_height, 32),
         &game_config.title,
-        window_style::CLOSE,
-        &ContextSettings::default(),
-    ) {
-        Some(window) => window,
-        None => {
-            error!("Could not init a RenderWindow. There is likely a problem with your system.");
-            return 1;
-        }
-    };
+        WindowStyle::CLOSE,
+        &ContextSettings::default());
+
     // Set the game's maximum framerate.
     window.set_framerate_limit(engine_config.maximum_framerate);
 
@@ -63,7 +55,7 @@ fn fake_main<'engine>() -> i32 {
         });
 
     // TEMP: TODO: Remove this, it's just for testing the map loading
-    let mut spr = sfml::graphics::Sprite::with_texture(&current_map.tilesets[0].texture);
+    let spr = sfml::graphics::Sprite::with_texture(&current_map.tilesets[0].texture);
 
     while window.is_open() {
         // poll_event() returns Some(e) if there's an event to look at
@@ -76,7 +68,7 @@ fn fake_main<'engine>() -> i32 {
 
         // Clear the window to ready it for rendering
         // TODO: Configurable background color
-        window.clear(&Color::black());
+        window.clear(&Color::BLACK);
 
         // Draw the loaded map's tilesheet so we can see it
         window.draw(&spr);
