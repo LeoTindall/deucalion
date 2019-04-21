@@ -77,7 +77,7 @@ dependencies = [
  "log 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "sfml 0.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tiled 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "update_rate 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "update_rate 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -262,7 +262,7 @@ dependencies = [
 
 [[package]]
 name = "update_rate"
-version = "1.1.0"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -317,7 +317,7 @@ dependencies = [
 "checksum tiled 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)" = "5479318e76999d2cf97e56633948d7da38c64b53553c2ae9daa0b707c1a94191"
 "checksum ucd-util 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "fd2be2d6639d0f8fe6cdda291ad456e23629558d466e2789d2c3e9892bda285d"
 "checksum unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "382810877fe448991dfc7f0dd6e3ae5d58088fd0ea5e35189655f84e6814fa56"
-"checksum update_rate 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b604e2fbd04ab394935b91bbe58e2364e2895ee8bac124707ec4ad08c86eedcf"
+"checksum update_rate 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "cd4354cbee0710a7d8cc5e7230a08c4ffa602aea0f1b65a95cf0dce934bbd1d8"
 "checksum utf8-ranges 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "662fab6525a98beff2921d7f61a39e7d59e0b425ebc7d0d9e66d316e55124122"
 "checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 "checksum xml-rs 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "7ec6c39eaa68382c8e31e35239402c0a9489d4141a8ceb0c716099a0b515b562"
